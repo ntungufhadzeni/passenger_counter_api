@@ -61,7 +61,6 @@ class CounterSchema(ma.Schema):
 
 @app.route('/passenger-data', methods=['GET'])
 def get_data_by_time():
-    # "Mon, 15 Aug 2022 14:54:27 GMT"
     # Passenger counter is ArmType == 232
     # if ArmInfo == 15, second value of ArmDesc is passenger in
     # passenger out is third value, and 7th value is total people
