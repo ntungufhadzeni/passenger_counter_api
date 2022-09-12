@@ -1,8 +1,6 @@
 import os
 
 from flask import Flask, request, make_response
-from marshmallow import fields
-from flask_marshmallow import Marshmallow
 from sqlalchemy import and_, create_engine
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -26,7 +24,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-ma = Marshmallow(app)
 
 
 class Counter(db.Model):
@@ -43,20 +40,6 @@ class Counter(db.Model):
 
     def __repr__(self):
         return f'<Counter(bus: {self.vehicle}, alarm_time: {self.alarm_time}>)'
-
-
-class CounterSchema(ma.Schema):
-    class Meta(ma.Schema.Meta):
-        model = Counter
-        sqla_session = db.session
-
-    vehicle = fields.Integer()
-    alarm_time = fields.String()
-    alarm_type = fields.Integer()
-    alarm_info = fields.Integer()
-    alarm_desc = fields.Integer()
-    latitude = fields.String()
-    longitude = fields.String()
 
 
 @app.route('/passenger-data', methods=['GET'])
