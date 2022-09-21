@@ -4,7 +4,7 @@ from flask import Flask, request, make_response
 from sqlalchemy import and_, create_engine
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from waitress import serve
 
@@ -27,7 +27,7 @@ migrate = Migrate(app, db)
 
 
 class Counter(db.Model):
-    __tablename__ = 'dev_alarm'
+    __tablename__ = 'dev_alarm_' + datetime.now().strftime('%Y%m')
 
     guid = db.Column('Guid', db.String, primary_key=True)
     vehicle = db.Column('DevIDNo')
@@ -54,14 +54,15 @@ def get_data_by_time():
     alarm = []
     gnss = []
     args = request.args
-    dt = datetime.strptime(args['time'], '%Y-%m-%d %H:%M:%S')
+    dt = datetime.strptime(args['time'], '%Y-%m-%d %H:%M:%S') + timedelta(hours=6)
 
     counter = Counter.query.filter(and_(Counter.alarm_time > dt, Counter.alarm_type == 232)).all()
 
     for i in range(len(counter)):
         bus = int(counter[i].vehicle)
         pass_data = counter[i].alarm_desc.split(',')
-        alarm_ts = counter[i].alarm_time.strftime('%Y-%m-%d %H:%M:%S')
+        alarm_t = counter[i].alarm_time - timedelta(hours=6)
+        alarm_ts = alarm_t.strftime('%Y-%m-%d %H:%M:%S')
         if counter[i].alarm_info == 15:
             in_c = int(pass_data[1])
             out_c = int(pass_data[2])
@@ -86,4 +87,7 @@ def get_data_by_time():
     return make_response(data)
 
 
-serve(app, host='0.0.0.0', port=5555, threads=1)
+# serve(app, host='0.0.0.0', port=5555, threads=1)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5555)
