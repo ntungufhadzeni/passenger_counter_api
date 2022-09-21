@@ -87,7 +87,7 @@ def get_data_by_time():
     return make_response(data)
 
 
-# serve(app, host='0.0.0.0', port=5555, threads=1)
+serve(app, host='0.0.0.0', port=5555, threads=1)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5555)
+# if __name__ == '__main__':
+#   app.run(host='0.0.0.0', port=5555)
