@@ -27,7 +27,8 @@ migrate = Migrate(app, db)
 
 
 class Counter(db.Model):
-    __tablename__ = 'dev_alarm_' + datetime.now().strftime('%Y%m')
+    dt = datetime.now() + timedelta(hours=6)
+    __tablename__ = 'dev_alarm_' + dt.strftime('%Y%m')
 
     guid = db.Column('Guid', db.String, primary_key=True)
     vehicle = db.Column('DevIDNo')
@@ -88,6 +89,3 @@ def get_data_by_time():
 
 
 serve(app, host='0.0.0.0', port=5555, threads=1)
-
-# if __name__ == '__main__':
-#   app.run(host='0.0.0.0', port=5555)
